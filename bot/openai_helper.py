@@ -86,7 +86,7 @@ class OpenAIHelper:
         :return: The answer from the model and the number of tokens used
         """
 
-        query = query.lower()
+        #query = query.lower()
 
         response = await self.__common_get_chat_response(chat_id, query)
         answer = ''
@@ -155,7 +155,7 @@ class OpenAIHelper:
 
             self.last_updated[chat_id] = datetime.datetime.now()
 
-            self.__add_to_history(chat_id, role="user", content=query.lower())
+            self.__add_to_history(chat_id, role="user", content=query)
 
             # Summarize the chat history if it's too long to avoid excessive token usage
             token_count = self.__count_tokens(self.conversations[chat_id])
