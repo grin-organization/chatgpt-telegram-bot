@@ -36,11 +36,11 @@ class ChatGPTTelegramBot:
         self.openai = openai
         bot_language = self.config['bot_language']
         self.commands = [
-            BotCommand(command='help', description=localized_text('help_description', bot_language)),
-            BotCommand(command='reset', description=localized_text('reset_description', bot_language)),
-            BotCommand(command='image', description=localized_text('image_description', bot_language)),
-            BotCommand(command='stats', description=localized_text('stats_description', bot_language)),
-            BotCommand(command='resend', description=localized_text('resend_description', bot_language))
+            BotCommand(command='start', description=localized_text('start_description', bot_language)),
+            BotCommand(command='clear', description=localized_text('clear_description', bot_language)),
+            #BotCommand(command='image', description=localized_text('image_description', bot_language)),
+            #BotCommand(command='stats', description=localized_text('stats_description', bot_language)),
+            #BotCommand(command='resend', description=localized_text('resend_description', bot_language))
         ]
         self.group_commands = [BotCommand(
             command='chat', description=localized_text('chat_description', bot_language)
@@ -59,15 +59,16 @@ class ChatGPTTelegramBot:
         commands_description = [f'/{command.command} - {command.description}' for command in commands]
         bot_language = self.config['bot_language']
         help_text = (
-                localized_text('help_text', bot_language)[0] +
+                localized_text('start_text', bot_language)[0] +
                 '\n\n' +
                 '\n'.join(commands_description) +
                 '\n\n' +
-                localized_text('help_text', bot_language)[1] +
+                localized_text('start_text', bot_language)[1] +
                 '\n\n' +
-                localized_text('help_text', bot_language)[2]
+                localized_text('start_text', bot_language)[2]
         )
         await update.message.reply_text(help_text, disable_web_page_preview=True)
+
 
     async def stats(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
@@ -137,6 +138,8 @@ class ChatGPTTelegramBot:
 
         usage_text = text_current_conversation + text_today + text_month + text_budget
         await update.message.reply_text(usage_text, parse_mode=constants.ParseMode.MARKDOWN)
+
+
 
     async def resend(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
@@ -230,6 +233,7 @@ class ChatGPTTelegramBot:
                 )
 
         await wrap_with_indicator(update, context, _generate, constants.ChatAction.UPLOAD_PHOTO)
+
 
     async def transcribe(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """

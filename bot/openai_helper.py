@@ -77,6 +77,7 @@ class OpenAIHelper:
             self.reset_chat_history(chat_id)
         return len(self.conversations[chat_id]), self.__count_tokens(self.conversations[chat_id])
 
+
     async def get_chat_response(self, chat_id: int, query: str) -> tuple[str, str]:
         """
         Gets a full response from the GPT model.
@@ -84,6 +85,9 @@ class OpenAIHelper:
         :param query: The query to send to the model
         :return: The answer from the model and the number of tokens used
         """
+
+        query = query.lower()
+
         response = await self.__common_get_chat_response(chat_id, query)
         answer = ''
 
@@ -115,6 +119,7 @@ class OpenAIHelper:
         :param query: The query to send to the model
         :return: The answer from the model and the number of tokens used, or 'not_finished'
         """
+
         response = await self.__common_get_chat_response(chat_id, query, stream=True)
 
         answer = ''
@@ -141,6 +146,8 @@ class OpenAIHelper:
         :param query: The query to send to the model
         :return: The answer from the model and the number of tokens used
         """
+
+
         bot_language = self.config['bot_language']
         try:
             if chat_id not in self.conversations or self.__max_age_reached(chat_id):
@@ -148,7 +155,7 @@ class OpenAIHelper:
 
             self.last_updated[chat_id] = datetime.datetime.now()
 
-            self.__add_to_history(chat_id, role="user", content=query)
+            self.__add_to_history(chat_id, role="user", content=query.lower())
 
             # Summarize the chat history if it's too long to avoid excessive token usage
             token_count = self.__count_tokens(self.conversations[chat_id])
